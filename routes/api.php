@@ -7,6 +7,8 @@ use App\Http\Controllers\API\v1\OrderController;
 use App\Http\Controllers\API\v1\OrderItemController;
 use App\Http\Controllers\API\v1\CartController;
 use App\Http\Controllers\API\v1\UserAddressController;
+use Illuminate\Support\Facades\DB;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -19,8 +21,19 @@ use App\Http\Controllers\API\v1\UserAddressController;
 |
 */
 
+$usersTable = DB::select(
+    "
+    SELECT table_schema 
+        FROM information_schema.tables
+    WHERE table_schema = DATABASE()
+            AND table_name = 'users';
+    "
+);
 
-//Auth::loginUsingId(4);
+//Apenas para conectar como algum usuário
+if(count($usersTable) > 0){
+    Auth::loginUsingId(1);
+}
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('products', ProductController::class);
